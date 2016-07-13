@@ -27,7 +27,7 @@ final public class JavaHBaseStreamingBulkPutExample {
 
   public static void main(String[] args) {
 
-    SparkConf sparkConf = new SparkConf().setMaster(args[0]).setAppName("JavaHBaseStreamingBulkPutExample ");
+    SparkConf sparkConf = new SparkConf().setMaster("local[*]").setAppName("JavaHBaseStreamingBulkPutExample ");
 
     JavaSparkContext jsc = new JavaSparkContext(sparkConf);
 
