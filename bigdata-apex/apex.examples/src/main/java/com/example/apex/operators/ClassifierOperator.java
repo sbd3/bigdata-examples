@@ -25,7 +25,7 @@ public class ClassifierOperator extends BaseOperator {
 
   private static final String FILE_DELIMITER = "|";
 
-  protected static final String[] metadataJsonAttributes = {"col1","col2"};;
+  protected static final String[] metadataJsonAttributes = {"col1","col2", "col3"};;
 
   @AutoMetric
   private long tuplesCount;
