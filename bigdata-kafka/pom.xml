@@ -8,31 +8,51 @@
 	</parent>
 	<groupId>bigdata.kafka</groupId>
 	<artifactId>kafka.examples</artifactId>
-	
+
+	<repositories>
+		<repository>
+			<id>confluent</id>
+			<url>http://packages.confluent.io/maven/</url>
+		</repository>
+	</repositories>
+
 	<properties>
-	   <kafka.version>0.10.0.1</kafka.version>
+		<kafka.version>0.10.1.0-cp2</kafka.version>
+		<spark.version>1.6.2</spark.version>
+		<avro.version>1.8.1</avro.version>
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.spark</groupId>
 			<artifactId>spark-streaming-kafka_2.11</artifactId>
-			<version>1.6.2</version>
+			<version>${spark.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.kafka</groupId>
-			<artifactId>kafka_2.11</artifactId>
+			<artifactId>kafka-streams</artifactId>
+			<version>${kafka.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.kafka</groupId>
+			<artifactId>kafka-clients</artifactId>
 			<version>${kafka.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.avro</groupId>
 			<artifactId>avro</artifactId>
-			<version>1.8.1</version>
+			<version>${avro.version}</version>
+		</dependency>
+		<!-- Dependencies below are required/recommended only when using Apache Avro. -->
+		<dependency>
+			<groupId>io.confluent</groupId>
+			<artifactId>kafka-avro-serializer</artifactId>
+			<version>3.1.1</version>
 		</dependency>
 		<dependency>
-            <groupId>org.apache.kafka</groupId>
-            <artifactId>kafka-streams</artifactId>
-            <version>${kafka.version}</version>
-        </dependency>
+			<groupId>org.apache.avro</groupId>
+			<artifactId>avro-maven-plugin</artifactId>
+			<version>${avro.version}</version>
+		</dependency>
 	</dependencies>
 </project>
