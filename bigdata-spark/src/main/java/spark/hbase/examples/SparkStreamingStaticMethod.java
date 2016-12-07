@@ -18,6 +18,7 @@ import org.apache.spark.api.java.function.Function;
 import org.apache.spark.api.java.function.Function2;
 import org.apache.spark.api.java.function.MapFunction;
 import org.apache.spark.api.java.function.PairFunction;
+import org.apache.spark.api.java.function.VoidFunction;
 import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaPairDStream;
@@ -43,7 +44,7 @@ public class SparkStreamingStaticMethod implements Serializable {
 	}
 
 	@SuppressWarnings("deprecation")
-	public static void main(String[] args) throws ParserConfigurationException, IOException {
+	public static void main(String[] args) throws ParserConfigurationException, IOException, InterruptedException {
 		System.setProperty("HADOOP_USER_NAME", "hdfs");
 		SparkConf conf;
 		JavaStreamingContext jssc;
@@ -95,15 +96,12 @@ public class SparkStreamingStaticMethod implements Serializable {
 
 		});
 
-		dp.foreach(new Function<JavaRDD<DataPayload>, Void>() {
-
-			@Override
-			public Void call(JavaRDD<DataPayload> paramT1) throws Exception {
-
-				paramT1.saveAsTextFile("hdfs://10.5.3.166:8020/user/storm/demo/wordcount");
-
-				return null;
-			}
+		dp.foreachRDD(new VoidFunction<JavaRDD<DataPayload>>() {
+		    private static final long serialVersionUID = 1L;
+		    @Override
+		    public void call(JavaRDD<DataPayload> paramT1) throws Exception {
+			paramT1.saveAsTextFile("hdfs://10.5.3.166:8020/user/storm/demo/wordcount");
+		    }
 		});
 
 		// filteredLinesTwo.print();
