@@ -34,8 +34,8 @@ public class JScriptSpark implements Serializable {
 	JavaSparkContext jsc = new JavaSparkContext(sc);
 
 	JScriptSpark obj = new JScriptSpark();
-	Dataset<Row> df = obj.getDataFrame(session.sqlContext());
-	obj.executeJScript(df, jsc);
+	Dataset<Row> ds = obj.getDataFrame(session.sqlContext());
+	obj.executeJScript(ds, jsc);
     }
 
     private ScriptEngine getEngine() throws ScriptException {

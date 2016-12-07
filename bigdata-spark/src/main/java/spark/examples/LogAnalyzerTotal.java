@@ -50,7 +50,7 @@ public class LogAnalyzerTotal implements Serializable {
     });
 
     // A DStream of Resonse Code Counts;
-    JavaPairDStream<Integer, Long> responseCodeCountDStream = accessLogsDStream.transformToPair(
+    /*JavaPairDStream<Integer, Long> responseCodeCountDStream = accessLogsDStream.transformToPair(
       new Function<JavaRDD<ApacheAccessLog>, JavaPairRDD<Integer, Long>>() {
         public JavaPairRDD<Integer, Long> call(JavaRDD<ApacheAccessLog> rdd) {
           return Functions.responseCodeCount(rdd);
@@ -60,7 +60,7 @@ public class LogAnalyzerTotal implements Serializable {
         public Void call(JavaPairRDD<Integer, Long> rdd) {
           currentResponseCodeCounts = rdd.take(100);
           return null;
-        }});
+        }});*/
 
     // A DStream of ipAddressCounts.
     JavaPairDStream<String, Long> ipRawDStream = accessLogsDStream.transformToPair(
@@ -69,8 +69,8 @@ public class LogAnalyzerTotal implements Serializable {
         return Functions.ipAddressCount(rdd);
       }});
 
-      JavaPairDStream<String, Long> ipCumDStream = ipRawDStream.updateStateByKey(
-        new Functions.ComputeRunningSum());
+      /*JavaPairDStream<String, Long> ipCumDStream = ipRawDStream.updateStateByKey(
+        new Functions.ComputeRunningSum());*/
 
     // A DStream of ipAddressCounts without transform
     JavaPairDStream<String, Long> ipDStream = accessLogsDStream.mapToPair(new Functions.IpTuple());
@@ -94,38 +94,38 @@ public class LogAnalyzerTotal implements Serializable {
                                       OutFormat.class);
     
     // All ips more than 10
-    JavaDStream<String> ipAddressDStream = ipCumDStream.transform(
+    /*JavaDStream<String> ipAddressDStream = ipCumDStream.transform(
       new Function<JavaPairRDD<String, Long>, JavaRDD<String>>() {
         public JavaRDD<String> call(JavaPairRDD<String, Long> rdd) {
           return Functions.filterIPAddress(rdd);
         }
-      });
+      });*/
 
-    ipAddressDStream.foreachRDD(new Function<JavaRDD<String>, Void>() {
+    /*ipAddressDStream.foreachRDD(new Function<JavaRDD<String>, Void>() {
         public Void call(JavaRDD<String> rdd) {
           List<String> currentIPAddresses = rdd.take(100);
           return null;
-        }});
+        }});*/
 
     // A DStream of endpoint to count.
-    JavaPairDStream<String, Long> endpointCountsDStream = accessLogsDStream.transformToPair(
+    /*JavaPairDStream<String, Long> endpointCountsDStream = accessLogsDStream.transformToPair(
       new Function<JavaRDD<ApacheAccessLog>, JavaPairRDD<String, Long>>() {
         public JavaPairRDD<String, Long> call(JavaRDD<ApacheAccessLog> rdd) {
           return Functions.endpointCount(rdd);
         }
       })
-      .updateStateByKey(new Functions.ComputeRunningSum());
+      .updateStateByKey(new Functions.ComputeRunningSum());*/
 
     Object ordering = Ordering.natural();
     final Comparator<Long> cmp = (Comparator<Long>)ordering;
 
-    endpointCountsDStream.foreachRDD(new Function<JavaPairRDD<String, Long>, Void>() {
+   /* endpointCountsDStream.foreachRDD(new Function<JavaPairRDD<String, Long>, Void>() {
         public Void call(JavaPairRDD<String, Long> rdd) {
       currentTopEndpoints = rdd.takeOrdered(
         10,
         new Functions.ValueComparator<String, Long>(cmp));
       return null;
-        }});
+        }});*/
   }
 
   public LogStatistics getLogStatistics() {
