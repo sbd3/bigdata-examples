@@ -15,7 +15,9 @@ public class ExpressionTree {
 	    for (int j = 0; j < arr.length; j++) {
 		arr[j] = scan.next();
 	    }
-	    eval(parseRoot(arr));
+	    Tree root = parseRoot(arr);
+	    printTree(root);
+	    System.out.println(eval(root));
 	}
 	scan.close();
     }
@@ -37,30 +39,39 @@ public class ExpressionTree {
 	return process(arr, 1);
     }
 
-    private static Long eval(Tree root) {
-	if (root.left.left == null) {
-	    return Long.valueOf(root.data);
+    private static String eval(Tree root) {
+	if(root.left.left == null) {
+	    long val = evaluate(root.data, root.left.data, root.right.data);
+	    root.data = String.valueOf(val);
+	    root.left = null;
+	    root.right = null;
+	    return root.data;
+	} else {
+	    return String.valueOf(evaluate(root.data, eval(root.left), eval(root.right)));
 	}
-	return evaluate(root.data, root.left.data, root.right.data);
     }
 
     private static void printTree(Tree root) {
 	if (root != null) {
 	    printTree(root.left);
-	    System.out.println(root.data + " ");
+	    System.out.print(root.data + " ");
 	    printTree(root.right);
 	}
     }
-
+    
     private static Long evaluate(String exprn, String leftval, String rightval) {
 	if ("+".equals(exprn)) {
-	    return Long.valueOf(leftval) + Long.valueOf(rightval);
+	    long val  = Long.valueOf(leftval) + Long.valueOf(rightval);
+	    return val;
 	} else if ("-".equals(exprn)) {
-	    return Long.valueOf(leftval) - Long.valueOf(rightval);
+	    long val  = Long.valueOf(leftval) - Long.valueOf(rightval);
+	    return val;
 	} else if ("*".equals(exprn)) {
-	    return Long.valueOf(leftval) * Long.valueOf(rightval);
+	    long val  = Long.valueOf(leftval) * Long.valueOf(rightval);
+	    return val;
 	} else if ("/".equals(exprn)) {
-	    return Long.valueOf(leftval) / Long.valueOf(rightval);
+	    long val  = Long.valueOf(leftval) / Long.valueOf(rightval);
+	    return val;
 	} else {
 	    throw new UnsupportedOperationException("Unsupported operation");
 	}
