@@ -1,15 +1,14 @@
 package spark.examples;
 
+import java.io.IOException;
+
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.spark.SparkConf;
-import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.function.VoidFunction;
 import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
-import org.apache.spark.api.java.function.Function;
-
-import java.io.IOException;
 
 /**
  * The LogAnalyzerAppMain is an sample logs analysis application.  For now,
@@ -68,7 +67,7 @@ public class LogAnalyzerAppMain {
     return options;
   }
 
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) throws IOException, InterruptedException {
     Flags.setFromCommandLineArgs(THE_OPTIONS, args);
 
     // Startup the Spark Conf.
@@ -97,17 +96,18 @@ public class LogAnalyzerAppMain {
 
     // Render the output each time there is a new RDD in the accessLogsDStream.
     final Renderer renderer = new Renderer();
-    accessLogsDStream.foreachRDD(new Function<JavaRDD<ApacheAccessLog>, Void>() {
-        public Void call(JavaRDD<ApacheAccessLog> rdd) {
-          // Call this to output the stats.
-          try {
-            renderer.render(logAnalyzerTotal.getLogStatistics(),
-                            logAnalyzerWindowed.getLogStatistics());
-          } catch (Exception e) {
-          }
-          return null;
+    accessLogsDStream.foreachRDD(new VoidFunction<JavaRDD<ApacheAccessLog>>() {
+        
+        @Override
+        public void call(JavaRDD<ApacheAccessLog> arg0) throws Exception {
+         // Call this to output the stats.
+            try {
+              renderer.render(logAnalyzerTotal.getLogStatistics(),
+                              logAnalyzerWindowed.getLogStatistics());
+            } catch (Exception e) {
+            }
         }
-      });
+    });
 
     // Start the streaming server.
     jssc.start();              // Start the computation

@@ -7,7 +7,8 @@ import java.util.List;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
-import org.apache.spark.sql.DataFrame;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
 import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.SQLContext;
 import org.apache.spark.sql.types.DataTypes;
@@ -31,7 +32,7 @@ public class DataFrameTest {
 			return p;
 		});
 		
-		DataFrame df = sqlCtx.createDataFrame(rdd, Person.class);
+		Dataset<Row> df = sqlCtx.createDataFrame(rdd, Person.class);
 		df.toJavaRDD().map(row -> {
 			System.out.println(Arrays.asList(row.schema().fieldNames()).contains("age"));
 			return row;
@@ -43,9 +44,9 @@ public class DataFrameTest {
 		
 	}
 
-	private static void addColumnWithQuery(SQLContext sqlCtx, DataFrame df) {
+	private static void addColumnWithQuery(SQLContext sqlCtx, Dataset<Row> df) {
 		df.registerTempTable("temp");
-		DataFrame newDF = sqlCtx.sql("select *, true as abc from temp");
+		Dataset<Row> newDF = sqlCtx.sql("select *, true as abc from temp");
 		sqlCtx.dropTempTable("temp");
 		newDF.show();
 		for(StructField field : newDF.schema().fields()) {
@@ -53,7 +54,7 @@ public class DataFrameTest {
 		}
 	}
 
-	private static void addColumn(SQLContext sqlCtx, DataFrame df) {
+	private static void addColumn(SQLContext sqlCtx, Dataset<Row> df) {
 		StructField fieldNew = new StructField("abc", DataTypes.StringType, true, new Metadata());
 		
 		List<StructField> fields = new ArrayList<>();
@@ -62,7 +63,7 @@ public class DataFrameTest {
 		}
 		fields.add(fieldNew);
 		StructType schema =  DataTypes.createStructType(fields);
-		DataFrame outputDF = sqlCtx.createDataFrame(df.toJavaRDD().map(row -> {
+		Dataset<Row> outputDF = sqlCtx.createDataFrame(df.toJavaRDD().map(row -> {
 			Object[] arr = new Object[row.size() + 1];
 			for (int i = 0; i < row.size(); i++) {
 				arr[i] = row.get(i);
@@ -71,7 +72,7 @@ public class DataFrameTest {
 			return RowFactory.create(arr);
 		}), schema);
 		outputDF.show();
-		DataFrame out = outputDF.withColumn("abc", outputDF.col("abc"), new Metadata());
+		Dataset<Row> out = outputDF.withColumn("abc", outputDF.col("abc"), new Metadata());
 		out.show();
 	}
 	

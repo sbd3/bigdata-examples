@@ -5,7 +5,8 @@ import java.util.UUID;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
-import org.apache.spark.sql.DataFrame;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SQLContext;
 import org.apache.spark.sql.SaveMode;
 
@@ -43,7 +44,7 @@ public class CassandraTest {
 			p.setUid(UUID.randomUUID().toString());
 			return p;
 		});
-		DataFrame df = sqlCtx.createDataFrame(rdd, Person.class);
+		Dataset<Row> df = sqlCtx.createDataFrame(rdd, Person.class);
 		df.show();
 		df.write().format("org.apache.spark.sql.cassandra").option("keyspace", "cdip").option("table", "emp")
 				.mode(SaveMode.Append).save();

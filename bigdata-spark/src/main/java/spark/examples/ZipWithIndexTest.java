@@ -18,7 +18,7 @@ public class ZipWithIndexTest {
 			integers.add(i);
 		}*/
 		JavaPairRDD<String, Long> rdd = sc.textFile("d:/seq.txt", 4).zipWithIndex();
-		for(Partition partition: rdd.splits()) {
+		for(Partition partition: rdd.partitions()) {
 			System.out.println("Index:: "+partition.index());
 		}
 		System.out.println(rdd.count());

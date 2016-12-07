@@ -34,19 +34,20 @@ public class LogAnalyzerTotal implements Serializable {
 
   public void processAccessLogs(String outDir, JavaDStream<ApacheAccessLog> accessLogsDStream) {
     // Calculate statistics based on the content size, and update the static variables to track this.
-    accessLogsDStream.foreachRDD(new Function<JavaRDD<ApacheAccessLog>, Void>() {
-        public Void call(JavaRDD<ApacheAccessLog> accessLogs) {
-          Tuple4<Long, Long, Long, Long> stats =
-              Functions.contentSizeStats(accessLogs);
-          if (stats != null) {
-            runningCount.getAndAdd(stats._1());
-            runningSum.getAndAdd(stats._2());
-            runningMin.set(Math.min(runningMin.get(), stats._3()));
-            runningMax.set(Math.max(runningMax.get(), stats._4()));
-          }
-          return null;
-        }}
-      );
+    accessLogsDStream.foreachRDD(new VoidFunction<JavaRDD<ApacheAccessLog>>() {
+
+	@Override
+	public void call(JavaRDD<ApacheAccessLog> accessLogs) throws Exception {
+	    Tuple4<Long, Long, Long, Long> stats =
+	              Functions.contentSizeStats(accessLogs);
+	          if (stats != null) {
+	            runningCount.getAndAdd(stats._1());
+	            runningSum.getAndAdd(stats._2());
+	            runningMin.set(Math.min(runningMin.get(), stats._3()));
+	            runningMax.set(Math.max(runningMax.get(), stats._4()));
+	          }
+	}
+    });
 
     // A DStream of Resonse Code Counts;
     JavaPairDStream<Integer, Long> responseCodeCountDStream = accessLogsDStream.transformToPair(

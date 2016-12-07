@@ -6,7 +6,8 @@ import java.text.SimpleDateFormat;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
-import org.apache.spark.sql.DataFrame;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SQLContext;
 
 import spark.examples.vo.DOB;
@@ -27,7 +28,7 @@ public class DataTypeCheck {
 			return p;
 		});
 		
-		DataFrame df = sqlCtx.createDataFrame(rdd, DOB.class);
+		Dataset<Row> df = sqlCtx.createDataFrame(rdd, DOB.class);
 		df.show();
 		df.printSchema();
 	}
