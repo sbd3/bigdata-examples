@@ -4,6 +4,11 @@
 	<groupId>bigdata.spark</groupId>
 	<artifactId>spark.examples</artifactId>
 	<version>1.0.1</version>
+	
+	<properties>
+	   <spark.version>2.0.0</spark.version>
+	   <scala.version>2.11</scala.version>
+	</properties>
 
 	<build>
 		<plugins>
@@ -88,28 +93,28 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.spark</groupId>
-			<artifactId>spark-streaming-kafka_2.10</artifactId>
-			<version>1.6.0</version>
+			<artifactId>spark-streaming-kafka_${scala.version}</artifactId>
+			<version>1.6.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.spark</groupId>
-			<artifactId>spark-mllib_2.10</artifactId>
-			<version>1.6.0</version>
+			<artifactId>spark-mllib_${scala.version}</artifactId>
+			<version>${spark.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.spark</groupId>
-			<artifactId>spark-core_2.10</artifactId>
-			<version>1.6.0</version>
+			<artifactId>spark-core_${scala.version}</artifactId>
+			<version>${spark.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.spark</groupId>
-			<artifactId>spark-sql_2.10</artifactId>
-			<version>1.6.0</version>
+			<artifactId>spark-sql_${scala.version}</artifactId>
+			<version>${spark.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.spark</groupId>
-			<artifactId>spark-streaming_2.10</artifactId>
-			<version>1.6.0</version>
+			<artifactId>spark-streaming_${scala.version}</artifactId>
+			<version>${spark.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.hbase</groupId>
@@ -133,7 +138,7 @@
 		<dependency>
 			<groupId>org.apache.hbase</groupId>
 			<artifactId>hbase-it</artifactId>
-			<version>1.2.1</version>
+			<version>1.2.4</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>jetty-util</artifactId>

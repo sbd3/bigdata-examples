@@ -9,36 +9,41 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.script.Invocable;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.GetEditLogManifestRequestProto;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.FlatMapFunction;
-import org.apache.spark.api.java.function.Function;
 import org.apache.spark.api.java.function.PairFunction;
 import org.apache.spark.broadcast.Broadcast;
-import org.apache.spark.sql.DataFrame;
+import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
-import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.SQLContext;
+import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.api.java.UDF1;
 import org.apache.spark.sql.types.DataTypes;
 
 import scala.Tuple2;
+import spark.examples.ConcatTransform;
+import spark.examples.Transformer;
 
 public class JScriptSparkTest implements Serializable {
 
 	private static final long serialVersionUID = 2173160634301125849L;
 
 	public static void main(String[] args) throws NoSuchMethodException, ScriptException, NoSuchAlgorithmException {
-		SparkConf conf = new SparkConf()
+	   /* SparkSession session = SparkSession.builder()
+		    .appName("JSTest")
+		    .master("local[*]")
+		    .config("spark.serializer","org.apache.spark.serializer.KryoSerializer")
+		    .getOrCreate();*/
+	    
+	    SparkConf conf = new SparkConf()
 				.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
 				.setAppName("JSTest")
 				.setMaster("local[*]");
@@ -46,7 +51,7 @@ public class JScriptSparkTest implements Serializable {
 		SQLContext sqlCtx = new SQLContext(jCtx);
 
 		JScriptSparkTest obj = new JScriptSparkTest();
-		DataFrame df = obj.getDataFrame(sqlCtx);
+		Dataset<Row> df = obj.getDataFrame(sqlCtx);
 		obj.executeJScript(df, jCtx);
 		//obj.transform(df);
 	}
@@ -59,7 +64,7 @@ public class JScriptSparkTest implements Serializable {
 		return engine;
 	}
 
-	private void executeJScript(DataFrame df, JavaSparkContext jCtx) throws ScriptException, NoSuchMethodException {
+	private void executeJScript(Dataset<Row> df, JavaSparkContext jCtx) throws ScriptException, NoSuchMethodException {
 
 		//final Broadcast<Invocable> broadcastVar = jCtx.broadcast(getInvocable());
 		final Broadcast<ScriptContext> broadcastVar = jCtx.broadcast(getEngine().getContext());
@@ -68,7 +73,7 @@ public class JScriptSparkTest implements Serializable {
 		JavaRDD<Row> rdd = df.toJavaRDD().mapPartitions(new FlatMapFunction<Iterator<Row>, Row>() {
 			private static final long serialVersionUID = 1L;
 			@Override
-			public Iterable<Row> call(Iterator<Row> rowIter) throws Exception {
+			public Iterator<Row> call(Iterator<Row> rowIter) throws Exception {
 				while(rowIter.hasNext()) {
 					Row row = rowIter.next();
 				}
@@ -127,7 +132,7 @@ public class JScriptSparkTest implements Serializable {
 		 */
 	}
 	
-	private void transform(DataFrame df) throws NoSuchAlgorithmException {
+	private void transform(Dataset<Row> df) throws NoSuchAlgorithmException {
 		final HashMap<String, Object> rulesMap = getRules();
 		final List<Transformer> transList = getRulesList();
 
@@ -176,7 +181,7 @@ public class JScriptSparkTest implements Serializable {
 		return rulesMap;
 	}
 
-	private DataFrame getDataFrame(SQLContext sqlCtx) {
+	private Dataset<Row> getDataFrame(SQLContext sqlCtx) {
 		sqlCtx.udf().register("stringLengthTest", new UDF1<String, Integer>() {
 			private static final long serialVersionUID = 1L;
 
