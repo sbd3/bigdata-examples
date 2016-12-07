@@ -1,4 +1,4 @@
 # bigdata-examples
-Big Data ecosystems snippets and examples
+Big Data snippets and examples
 
 
