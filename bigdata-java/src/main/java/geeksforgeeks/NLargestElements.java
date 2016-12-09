@@ -2,6 +2,11 @@ package geeksforgeeks;
 
 import java.util.Scanner;
 
+/**
+ * Modified bubble sort to iterate only n number of times.
+ * @author psingh15
+ *
+ */
 public class NLargestElements {
 
     public static void main(String[] args) {
