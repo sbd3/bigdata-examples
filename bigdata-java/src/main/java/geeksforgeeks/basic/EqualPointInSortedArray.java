@@ -1,4 +1,4 @@
-package geeksforgeeks;
+package geeksforgeeks.basic;
 
 import java.util.Scanner;
 
