@@ -21,9 +21,31 @@ public class MinimizeStringValue {
         for (char c : str.toCharArray()) {
             arr[c - 97] += 1;
         }
+        
+        while(rem > 0) {
+            rem = subtractK(arr, rem);
+        }
+        
+        printSum(arr);
+    }
+
+    private static int subtractK(int[] arr, int rem) {
+        int max = Integer.MIN_VALUE;
+        int maxindex = -1;
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] > max) {
+                max = arr[i];
+                maxindex = i;
+            }
+        }
+        if(arr[maxindex] > 0)
+            arr[maxindex] -= 1;
+        return --rem;
+    }
+
+    private static void printSum(int[] arr) {
         long sum = 0;
         for (int i = 0; i < arr.length; i++) {
-            
             sum += Math.pow(arr[i], 2);
         }
         System.out.println(sum);
