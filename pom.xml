@@ -35,4 +35,11 @@
     		<version>3.2.2</version>
     	</dependency>
     </dependencies>
+    <modules>
+    	<module>bigdata-hadoop</module>
+    	<module>bigdata-java</module>
+    	<module>bigdata-kafka</module>
+    	<module>bigdata-solr</module>
+    	<module>bigdata-spark</module>
+    </modules>
 </project>
