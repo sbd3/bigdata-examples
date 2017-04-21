@@ -14,12 +14,25 @@ public class SpiralMatrixPrinter {
 					matrix[j][j2] = scan.nextInt();
 				}
 			}
-			processMatrix(matrix);
+			//processMatrix(matrix);
 		}
 		scan.close();
 	}
 
-	private static void processMatrix(int[][] matrix) {
+	private static void processMatrix(int[][] matrix, int rowstart, int colstart, int rowend, int colend, int matrixlen) {
+		for (int i = rowstart; i < matrixlen; i++) {
+			for (int j = colstart; j < matrixlen; j++) {
+				System.out.print(matrix[i][j]);
+			}
+		}
+		
+	}
+	
+	private static void printRow(int[][] matrix, int rowstart, int len) {
+		
+	}
+	
+	private static void printCol(int[][] matrix, int rowstart, int len) {
 		
 	}
 }
