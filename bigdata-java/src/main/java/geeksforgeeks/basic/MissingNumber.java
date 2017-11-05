@@ -12,17 +12,11 @@ public class MissingNumber {
             for (int j = 0; j < arr.length; j++) {
                 arr[j] = scan.nextInt();
             }
-            boolean flag = true;
             for (int j = 0; j < arr.length - 1; j++) {
                 if(arr[j] + 1 != arr[j + 1]) {
-                    flag = false;
                     System.out.println(arr[j] + 1);
+                    break;
                 }
-            }
-            if(arr[0] != 1) {
-                System.out.println("1");
-            } else if(flag) {
-                System.out.println();
             }
         }
         scan.close();
