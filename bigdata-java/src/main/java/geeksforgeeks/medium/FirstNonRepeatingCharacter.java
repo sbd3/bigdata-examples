@@ -1,4 +1,4 @@
-package geeksforgeeks;
+package geeksforgeeks.medium;
 
 import java.util.HashSet;
 import java.util.LinkedList;
