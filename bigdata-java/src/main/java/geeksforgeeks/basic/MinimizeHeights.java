@@ -1,5 +1,6 @@
 package geeksforgeeks.basic;
 
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class MinimizeHeights {
@@ -13,12 +14,17 @@ public class MinimizeHeights {
 			for (int j = 0; j < arr.length; j++) {
 				arr[j] = scan.nextInt();
 			}
-			System.out.println(printMinHeight(k, arr));
+			process(k, arr);
 		}
 		scan.close();
 	}
 
-	private static int printMinHeight(int k, int[] arr) {
+    private static void process(int k, int[] arr) {
+        Arrays.sort(arr);
+        
+    }
+
+	/*private static int printMinHeight(int k, int[] arr) {
 		if(arr.length == 0) {
 			return 0;
 		}
@@ -52,6 +58,6 @@ public class MinimizeHeights {
 			}
 		}
 		return max - min;
-	}
+	}*/
 
 }
