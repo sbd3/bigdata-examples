@@ -1,10 +1,10 @@
 package geeksforgeeks.basic;
 
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class RatMaze {
-    
+
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
         int noOfTests = scan.nextInt();
@@ -16,13 +16,29 @@ public class RatMaze {
                     matrix[j][j2] = scan.nextInt();
                 }
             }
-            printPath(matrix, size);
+            for(String path: printPath(matrix, size)) {
+                System.out.println(path);
+            }
         }
         scan.close();
     }
-    
-    private static List<String> printPath(int[][] matrix, int n) {
-        return null;
+
+    private static ArrayList<String> printPath(int[][] matrix, int n) {
+        ArrayList<String> paths = new ArrayList<>();
+        process(matrix, n, 0, 0, "", paths);
+        return paths;
     }
-    
+
+    private static void process(int[][] matrix, int n, int i, int j, String path, ArrayList<String> paths) {
+        if (i == n - 1 && j == n - 1) {
+            paths.add(path);
+        }
+        if(i < n - 1 && matrix[i + 1][j] == 1) {
+            process(matrix, n, i + 1, j, path + "D", paths);
+        }
+        if(j < n - 1 && matrix[i][j + 1] == 1) {
+            process(matrix, n, i, j + 1, path + "R", paths);
+        }
+    }
+
 }
