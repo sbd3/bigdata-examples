@@ -48,7 +48,7 @@ public class SpeechRecognizer extends ResultAdapter {
       FileReader reader = new FileReader("src/main/resources/speech.grammar");
       RuleGrammar gram = rec.loadJSGF(reader);
       gram.setEnabled(true);
-
+      reader.close();
       // Add the listener to get results
       rec.addResultListener(new SpeechRecognizer());
 
