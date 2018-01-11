@@ -11,7 +11,6 @@ public class QuickSort {
         for (int i = 0; i < arr.length; i++) {
             arr[i] = scan.nextInt();
         }
-        printArr(arr);
         quick_sort(arr, 0, arr.length - 1);
         printArr(arr);
         scan.close();
