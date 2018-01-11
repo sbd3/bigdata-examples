@@ -1,5 +1,6 @@
 package hackeearth.basic.programming.algo;
 
+import java.util.Random;
 import java.util.Scanner;
 
 public class QuickSort {
@@ -25,10 +26,16 @@ public class QuickSort {
 
     private static void quick_sort(int[] arr, int start, int end) {
         if (start < end) {
-            int position = partition(arr, start, end);
+            int position = rand_partition(arr, start, end);
             quick_sort(arr, start, position - 1);
             quick_sort(arr, position + 1, end);
         }
+    }
+
+    private static int rand_partition(int[] arr, int start, int end) {
+        int random = start + Math.abs(new Random().nextInt() % (end - start + 1));
+        swap(arr, random, start);
+        return partition(arr, start, end);
     }
 
     private static int partition(int[] arr, int start, int end) {
