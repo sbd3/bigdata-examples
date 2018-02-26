@@ -23,20 +23,22 @@ public class CassandraTest {
         SparkConf conf = new SparkConf();
         conf.set("spark.cassandra.connection.host", "96.118.152.55");
         conf.set("spark.cassandra.connection.port", "9042");
+        conf.set("spark.cassandra.auth.username", "dev");          
+        conf.set("spark.cassandra.auth.password", "dev");
         SparkSession sparkSession = SparkSession.builder().master("local[3]").config(conf).appName("Test")
                 .getOrCreate();
         Dataset<Row> monthlyTruckRolls1 = sparkSession.read().format("org.apache.spark.sql.cassandra")
                 .options(new HashMap<String, String>() {
                     private static final long serialVersionUID = -1791084642785094154L;
                     {
-                        put("table", "monthly_truck_rolls_1");
-                        put("keyspace", "comcastforecasting");
+                        put("table", "fte_count_override");
+                        put("keyspace", "cft_dev");
                     }
                 }).load();
+        //System.out.println(monthlyTruckRolls1.count());
+        monthlyTruckRolls1.createOrReplaceTempView("fte_count_override");
 
-        monthlyTruckRolls1.createOrReplaceTempView("monthly_truck_rolls_1");
-
-        Dataset<Row> monthlyTruckRolls2 = sparkSession.read().format("org.apache.spark.sql.cassandra")
+        /*Dataset<Row> monthlyTruckRolls2 = sparkSession.read().format("org.apache.spark.sql.cassandra")
                 .options(new HashMap<String, String>() {
                     private static final long serialVersionUID = -305828187820274883L;
                     {
@@ -45,16 +47,14 @@ public class CassandraTest {
                     }
                 }).load();
 
-        monthlyTruckRolls2.createOrReplaceTempView("monthly_truck_rolls_2");
+        monthlyTruckRolls2.createOrReplaceTempView("monthly_truck_rolls_2");*/
 
-        Dataset<Row> df1 = sparkSession.sql("SELECT monthly_truck_rolls_1.region_name, " + "monthly_truck_rolls_1.year, "
-                + "monthly_truck_rolls_1.month, " + "truck_roll_type, " + "truck_roll_count, " + "subscribers, "
-                + "connects, " + "change_of_service, " + "equivalent_weeks, " + "actuals_projected "
-                + "FROM monthly_truck_rolls_1 "
-                + "INNER JOIN monthly_truck_rolls_2 USING (region_name, year, month,actuals_projected) "
-                + "where actuals_projected = 'A'");
-
-        df1.show();
+        //Dataset<Row> df1 = sparkSession.sql("select date, count(*) from fte_count_override where date like '%,%' group by date");
+        Dataset<Row> df2 = sparkSession.sql("select distinct forecast_id from fte_count_override where date like '%,%'");
+        //df1.show();
+        df2.write().csv("D:/tmp/output.csv");
+        df2.show();
+        
         sparkSession.close();
     }
 

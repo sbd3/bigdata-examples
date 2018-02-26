@@ -6,9 +6,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
+import javax.script.Invocable;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -18,19 +18,17 @@ import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
-import org.apache.spark.api.java.function.FlatMapFunction;
+import org.apache.spark.api.java.function.Function;
 import org.apache.spark.api.java.function.PairFunction;
 import org.apache.spark.broadcast.Broadcast;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
+import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.SQLContext;
-import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.api.java.UDF1;
 import org.apache.spark.sql.types.DataTypes;
 
 import scala.Tuple2;
-import spark.examples.ConcatTransform;
-import spark.examples.Transformer;
 
 public class JScriptSparkTest implements Serializable {
 
@@ -70,7 +68,7 @@ public class JScriptSparkTest implements Serializable {
 		final Broadcast<ScriptContext> broadcastVar = jCtx.broadcast(getEngine().getContext());
 		
 		final int size = df.schema().size();
-		JavaRDD<Row> rdd = df.toJavaRDD().mapPartitions(new FlatMapFunction<Iterator<Row>, Row>() {
+		/*JavaRDD<Row> rdd = df.toJavaRDD().mapPartitions(new FlatMapFunction<Iterator<Row>, Row>() {
 			private static final long serialVersionUID = 1L;
 			@Override
 			public Iterator<Row> call(Iterator<Row> rowIter) throws Exception {
@@ -79,8 +77,8 @@ public class JScriptSparkTest implements Serializable {
 				}
 				return null;
 			}
-		});
-		/*JavaRDD<Row> rdd = df.toJavaRDD().map(new Function<Row, Row>() {
+		});*/
+		JavaRDD<Row> rdd = df.toJavaRDD().map(new Function<Row, Row>() {
 			private static final long serialVersionUID = -3407691374762911971L;
 			ScriptEngine engine = null;
 			Invocable invocable = null;
@@ -105,7 +103,7 @@ public class JScriptSparkTest implements Serializable {
 				newRow[size] = (String) invocable.invokeFunction("fun1", tblRow.get(tblRow.fieldIndex("sender")));
 				return RowFactory.create(newRow);
 			}
-		});*/
+		});
 		List<Row> rows = rdd.collect();
 		for (Row row : rows) {
 			System.out.println(row.get(row.size()-1));
