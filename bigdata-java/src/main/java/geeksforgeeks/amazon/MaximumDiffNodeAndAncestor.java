@@ -1,4 +1,4 @@
-package geeksforgeeks.medium;
+package geeksforgeeks.amazon;
 
 import java.util.Scanner;
 
